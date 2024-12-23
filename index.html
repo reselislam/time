@@ -5,37 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            background-color: #191919; /* Set body background color */
+            background-color: #191919; /* Set the body background color */
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
+            overflow: hidden; /* Prevent scrollbars */
         }
 
-        /* Container for the iframe and the overlay */
+        /* Container for the iframe */
         .iframe-container {
             position: relative;
             width: 100%;
-            height: 300px; 
-            overflow: hidden; /* Hide any overflow content */
+            height: 300px; /* Adjust height as needed */
+            overflow: hidden; /* Hide overflow content */
         }
-        
+
         /* Styles for the iframe */
         iframe {
             width: 100%;
-            height: 100%; 
+            height: 100%;
             border: none;
-            overflow: hidden; /* Hide any overflow content within the iframe */
+            display: block; /* Ensure no inline gaps */
         }
-        
-        /* Overlay to cover the watermark */
-        .watermark-cover {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background: #191919;
-        }
-        
+
         /* Loading overlay */
         .loading-overlay {
             position: absolute;
@@ -43,13 +34,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: white; /* White background for the loading overlay */
+            background: #191919; /* Matches the background */
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1; /* Ensure it is above the iframe */
         }
-        
+
         /* Logo styles */
         .logo {
             width: 100px; /* Adjust the size as needed */
@@ -60,24 +51,28 @@
 <body>
     <div class="iframe-container">
         <iframe id="chart-iframe" src="https://www.widgetbox.app/embed/clock/digital/kHRDKppWzSBhXTSbWKMtTK?flag=true"></iframe>
-        <div class="watermark-cover"></div>
         <div id="loading-overlay" class="loading-overlay">
             <img src="/logo.png" alt="Loading..." class="logo">
         </div>
     </div>
 
     <script>
-        // Function to resize the iframe based on its content height
+        // Function to remove the loading overlay after iframe loads
+        document.getElementById('chart-iframe').onload = function () {
+            document.getElementById('loading-overlay').style.display = 'none';
+        };
+
+        // Optional: Adjust iframe height dynamically
         function resizeIframe() {
-            var iframe = document.getElementById('chart-iframe');
+            const iframe = document.getElementById('chart-iframe');
             try {
-                var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-                var iframeContentHeight = Math.max(
-                    iframeDocument.body.scrollHeight, 
+                const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                const iframeContentHeight = Math.max(
+                    iframeDocument.body.scrollHeight,
                     iframeDocument.documentElement.scrollHeight,
-                    iframeDocument.body.offsetHeight, 
+                    iframeDocument.body.offsetHeight,
                     iframeDocument.documentElement.offsetHeight,
-                    iframeDocument.body.clientHeight, 
+                    iframeDocument.body.clientHeight,
                     iframeDocument.documentElement.clientHeight
                 );
                 iframe.style.height = iframeContentHeight + 'px';
@@ -86,17 +81,7 @@
             }
         }
 
-        // Wait for the iframe to load
-        document.getElementById('chart-iframe').onload = function() {
-            setTimeout(function() {
-                // Hide the loading overlay after 5 seconds
-                document.getElementById('loading-overlay').style.display = 'none';
-                // Resize iframe after content is loaded
-                resizeIframe();
-            }, 5000); // 5000 milliseconds = 5 seconds
-        };
-
-        // Resize iframe when the window is resized (optional)
+        // Resize iframe when window resizes (optional)
         window.addEventListener('resize', resizeIframe);
     </script>
 </body>
